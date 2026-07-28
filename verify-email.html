@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email — SurveyGrid</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-green: #10b981;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .balance-badge {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent-green);
+            color: #34d399;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Card Workspace */
+        .auth-container {
+            max-width: 480px;
+            width: 90%;
+            margin: 3rem auto;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .icon-badge {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.25rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .email-display {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--text-light);
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider span {
+            padding: 0 0.75rem;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Resend Section */
+        .resend-box {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .resend-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .resend-link.disabled {
+            color: var(--text-muted);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Status Toast */
+        .status-msg {
+            display: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-msg.success {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent-green);
+            color: #34d399;
+        }
+
+        /* Footer */
+        footer {
+            padding: 1.5rem 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <a href="index.html" class="logo">
+            Survey<span>Grid</span>
+        </a>
+        <div class="balance-badge">
+            💰 Balance: KSh 0.00
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="icon-badge">📩</div>
+            <h1 class="page-title">Check Your Email</h1>
+            <p class="page-subtitle">
+                We sent a verification link & 6-digit code to <br>
+                <span class="email-display" id="userEmailDisplay">client@example.com</span>
+            </p>
+
+            <!-- Status Banner -->
+            <div id="statusMsg" class="status-msg"></div>
+
+            <!-- Option A: Enter Verification Code -->
+            <form id="codeForm" onsubmit="handleCodeSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Enter 6-Digit Verification Code</label>
+                    <input type="text" id="verificationCode" class="form-input" maxlength="6" placeholder="123456" pattern="\d{6}" inputmode="numeric" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Verify Code</button>
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Click the direct <strong>"Verify Email"</strong> link inside the email we sent to auto-activate your account.
+            </p>
+
+            <!-- Resend Section -->
+            <div class="resend-box">
+                Didn't get the email? 
+                <span id="resendBtn" class="resend-link disabled" onclick="resendEmail()">Resend Code/Link</span>
+                <span id="timerText">(in <span id="countdown">60</span>s)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Need help? Contact <a href="mailto:surveyGrid@gmail.com">surveyGrid@gmail.com</a> | &copy; 2026 SurveyGrid
+    </footer>
+
+    <script>
+        // Check if user came via a direct email link with token (e.g. verify-email.html?token=xyz123)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const emailParam = urlParams.get('email');
+
+            if (emailParam) {
+                document.getElementById('userEmailDisplay').innerText = emailParam;
+            }
+
+            // Auto-verify if opening link from email
+            if (token) {
+                showStatus('Verifying email link...', 'success');
+                setTimeout(() => {
+                    alert('Email verified successfully via magic link!');
+                    window.location.href = 'quiz.html';
+                }, 1200);
+            }
+        });
+
+        // Form code submission
+        function handleCodeSubmit(e) {
+            e.preventDefault();
+            const code = document.getElementById('verificationCode').value.trim();
+
+            if (code.length === 6) {
+                showStatus('Code verified! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'quiz.html';
+                }, 1000);
+            } else {
+                alert('Please enter a valid 6-digit code.');
+            }
+        }
+
+        // Resend Timer Logic
+        let timeLeft = 60;
+        const countdownEl = document.getElementById('countdown');
+        const timerTextEl = document.getElementById('timerText');
+        const resendBtn = document.getElementById('resendBtn');
+
+        function startTimer() {
+            timeLeft = 60;
+            resendBtn.classList.add('disabled');
+            timerTextEl.style.display = 'inline';
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    resendBtn.classList.remove('disabled');
+                    timerTextEl.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function resendEmail() {
+            showStatus('A new verification email and code have been sent.', 'success');
+            startTimer();
+        }
+
+        function showStatus(text, type) {
+            const msgEl = document.getElementById('statusMsg');
+            msgEl.innerText = text;
+            msgEl.className = `status-msg ${type}`;
+            msgEl.style.display = 'block';
+        }
+
+        // Start countdown timer on load
+        startTimer();
+    </script>
+</body>
+</html>
