@@ -1,1 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment & Yield Pools — SurveyGrid</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --error-color: #ef4444;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-blue);
+        }
+
+        .balance-badge {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent-green);
+            color: #34d399;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Container */
+        .dashboard-container {
+            max-width: 1100px;
+            width: 92%;
+            margin: 2rem auto;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        /* Section Split */
+        .section-header {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Plans Grid */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .plan-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 2rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .plan-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+        }
+
+        .plan-card.featured {
+            border-color: var(--accent-purple);
+            background: linear-gradient(180deg, #1e293b 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        .featured-tag {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background-color: var(--accent-purple);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-rate {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin-bottom: 0.25rem;
+        }
+
+        .plan-period {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .plan-features li span {
+            color: var(--accent-green);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-purple {
+            background-color: var(--accent-purple);
+            color: #ffffff;
+        }
+
+        .btn-purple:hover {
+            background-color: #7c3aed;
+        }
+
+        /* Calculator Card */
+        .calc-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .calc-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calc-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .form-input, .form-select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .range-slider {
+            width: 100%;
+            accent-color: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        .calc-results {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .result-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent-green);
+        }
+
+        /* Active Investments Table */
+        .table-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow-x: auto;
+            margin-bottom: 3rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: rgba(15, 23, 42, 0.6);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            width: 90%;
+            max-width: 480px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Footer */
+        footer {
+            padding: 1.5rem 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header -->
+    <header>
+        <a href="index.html" class="logo">
+            Survey<span>Grid</span>
+        </a>
+        <div class="nav-links">
+            <a href="quiz.html" class="nav-link">Quizzes</a>
+            <a href="build-survey.html" class="nav-link">Build Survey</a>
+            <a href="invest.html" class="nav-link active">Invest Pools</a>
+            <div class="balance-badge">
+                💰 Balance: KSh <span id="walletBalance">0.00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Workspace -->
+    <main class="dashboard-container">
+        <h1 class="page-title">Survey Liquidity & Staking Pools</h1>
+        <p class="page-subtitle">Stake points or capital into market research liquidity pools to earn daily yield compounding.</p>
+
+        <!-- Top Metrics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Total Invested</span>
+                <span class="stat-value">KSh 0.00</span>
+                <span class="stat-trend" style="color: var(--text-muted);">No active deposits</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Total Yield Earned</span>
+                <span class="stat-value" style="color: var(--accent-green);">KSh 0.00</span>
+                <span class="stat-trend" style="color: var(--text-muted);">0 active pools</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Average APY</span>
+                <span class="stat-value" style="color: var(--accent-amber);">14.2%</span>
+                <span class="stat-trend">Variable Yield Rate</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Next Payout</span>
+                <span class="stat-value" style="color: var(--text-muted);">-- : --</span>
+                <span class="stat-trend">Requires active stake</span>
+            </div>
+        </div>
+
+        <!-- Investment Tier Cards -->
+        <div class="section-header">
+            <span>Available Yield Pools</span>
+        </div>
+
+        <div class="plans-grid">
+            
+            <!-- Plan 1 -->
+            <div class="plan-card">
+                <div>
+                    <h3 class="plan-title">Micro Survey Pool</h3>
+                    <div class="plan-rate">8.5% <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">APY</span></div>
+                    <div class="plan-period">Lockup Period: 7 Days</div>
+                    <ul class="plan-features">
+                        <li><span>✓</span> Min Deposit: KSh 1,000</li>
+                        <li><span>✓</span> Instant Withdrawal on Maturity</li>
+                        <li><span>✓</span> Low Risk Liquidity Reserve</li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary" onclick="openDepositModal('Micro Survey Pool', 8.5)">Stake Funds</button>
+            </div>
+
+            <!-- Plan 2 (Featured) -->
+            <div class="plan-card featured">
+                <div class="featured-tag">Most Popular</div>
+                <div>
+                    <h3 class="plan-title">Enterprise Feedback Growth</h3>
+                    <div class="plan-rate" style="color: var(--accent-purple);">14.2% <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">APY</span></div>
+                    <div class="plan-period">Lockup Period: 30 Days</div>
+                    <ul class="plan-features">
+                        <li><span>✓</span> Min Deposit: KSh 5,000</li>
+                        <li><span>✓</span> Daily Yield Compounding</li>
+                        <li><span>✓</span> Moderate Risk Pool</li>
+                    </ul>
+                </div>
+                <button class="btn btn-purple" onclick="openDepositModal('Enterprise Feedback Growth', 14.2)">Stake Funds</button>
+            </div>
+
+            <!-- Plan 3 -->
+            <div class="plan-card">
+                <div>
+                    <h3 class="plan-title">Institutional Research Fund</h3>
+                    <div class="plan-rate" style="color: var(--accent-amber);">21.0% <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">APY</span></div>
+                    <div class="plan-period">Lockup Period: 90 Days</div>
+                    <ul class="plan-features">
+                        <li><span>✓</span> Min Deposit: KSh 20,000</li>
+                        <li><span>✓</span> Maximum Compound Returns</li>
+                        <li><span>✓</span> Priority Survey Allocation</li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary" onclick="openDepositModal('Institutional Research Fund', 21.0)">Stake Funds</button>
+            </div>
+
+        </div>
+
+        <!-- Interactive ROI Calculator -->
+        <div class="section-header">
+            <span>Yield & Return Calculator</span>
+        </div>
+
+        <div class="calc-card">
+            <div class="calc-controls">
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between;">
+                        <label class="form-label">Investment Amount (KSh)</label>
+                        <strong id="calcAmountLabel" style="color: var(--accent-blue);">KSh 10,000</strong>
+                    </div>
+                    <input type="range" id="calcAmount" class="range-slider" min="1000" max="100000" step="1000" value="10000" oninput="calculateYield()">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Selected Pool APY Rate</label>
+                    <select id="calcPoolSelect" class="form-select" onchange="calculateYield()">
+                        <option value="8.5">Micro Survey Pool (8.5% APY)</option>
+                        <option value="14.2" selected>Enterprise Feedback Growth (14.2% APY)</option>
+                        <option value="21.0">Institutional Research Fund (21.0% APY)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Duration (Months)</label>
+                    <input type="number" id="calcMonths" class="form-input" value="12" min="1" max="36" oninput="calculateYield()">
+                </div>
+            </div>
+
+            <div class="calc-results">
+                <div class="result-row">
+                    <span style="color: var(--text-muted);">Principal Investment</span>
+                    <span id="resPrincipal" style="font-weight: 600;">KSh 10,000.00</span>
+                </div>
+                <div class="result-row">
+                    <span style="color: var(--text-muted);">Projected Interest Earned</span>
+                    <span id="resInterest" class="result-value">+KSh 1,420.00</span>
+                </div>
+                <div class="result-row">
+                    <span style="color: var(--text-muted);">Estimated Total Value</span>
+                    <span id="resTotal" style="font-size: 1.4rem; font-weight: 800; color: #fff;">KSh 11,420.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Investments Table -->
+        <div class="section-header">
+            <span>My Active Staking Contracts</span>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pool Name</th>
+                        <th>Amount Staked</th>
+                        <th>APY Rate</th>
+                        <th>Earned Yield</th>
+                        <th>Maturity Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="empty-state">No active staking contracts. Stake funds in a pool to begin earning daily yield.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <!-- Deposit Modal -->
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-card">
+            <h3 id="modalPoolTitle" style="margin-bottom: 0.5rem; font-size: 1.3rem;">Stake Funds</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Enter the amount you wish to deposit into this yield pool in Shillings.</p>
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label">Deposit Amount (KSh)</label>
+                <input type="number" id="depositAmountInput" class="form-input" placeholder="e.g. 5000" value="5000">
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button class="btn" style="background: transparent; border: 1px solid var(--border-color); color: #fff;" onclick="closeDepositModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmStake()">Confirm Deposit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Need support regarding investment pools? Contact <a href="mailto:surveyGrid@gmail.com">surveyGrid@gmail.com</a> | &copy; 2026 SurveyGrid
+    </footer>
+
+    <!-- Interactive Script -->
+    <script>
+        function calculateYield() {
+            const amount = parseFloat(document.getElementById('calcAmount').value) || 0;
+            const apy = parseFloat(document.getElementById('calcPoolSelect').value) || 0;
+            const months = parseInt(document.getElementById('calcMonths').value) || 1;
+
+            document.getElementById('calcAmountLabel').innerText = 'KSh ' + amount.toLocaleString();
+
+            const yearlyRate = apy / 100;
+            const interest = amount * yearlyRate * (months / 12);
+            const total = amount + interest;
+
+            document.getElementById('resPrincipal').innerText = 'KSh ' + amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('resInterest').innerText = '+KSh ' + interest.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('resTotal').innerText = 'KSh ' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function openDepositModal(poolName, apy) {
+            document.getElementById('modalPoolTitle').innerText = `Stake Funds — ${poolName}`;
+            document.getElementById('depositModal').style.display = 'flex';
+        }
+
+        function closeDepositModal() {
+            document.getElementById('depositModal').style.display = 'none';
+        }
+
+        function confirmStake() {
+            const amt = parseFloat(document.getElementById('depositAmountInput').value);
+            if (amt && amt > 0) {
+                alert(`Successfully staked KSh ${amt.toLocaleString()} into the pool!`);
+                closeDepositModal();
+            } else {
+                alert('Please enter a valid deposit amount in Shillings.');
+            }
+        }
+
+        // Run initial calculation
+        calculateYield();
+    </script>
+</body>
+</html>
