@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification — SurveyGrid</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-green: #10b981;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-blue);
+        }
+
+        .balance-badge {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent-green);
+            color: #34d399;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Center Card Workspace */
+        .auth-container {
+            max-width: 460px;
+            width: 90%;
+            margin: 4rem auto;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .icon-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.25rem;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Code Input Container */
+        .otp-container {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .otp-input {
+            width: 48px;
+            height: 54px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .otp-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Resend Timer */
+        .resend-box {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .resend-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .resend-link.disabled {
+            color: var(--text-muted);
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Footer */
+        footer {
+            padding: 1.5rem 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header Navigation -->
+    <header>
+        <a href="index.html" class="logo">
+            Survey<span>Grid</span>
+        </a>
+        <div class="nav-links">
+            <a href="quiz.html" class="nav-link">Quizzes</a>
+            <a href="build-survey.html" class="nav-link">Build Survey</a>
+            <a href="invest.html" class="nav-link">Invest Pools</a>
+            <a href="opinion.html" class="nav-link">Opinions</a>
+            <div class="balance-badge">
+                💰 Balance: KSh <span id="walletBalance">0.00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="icon-badge">✉️</div>
+            <h1 class="page-title">Verify Your Email</h1>
+            <p class="page-subtitle">We sent a 6-digit verification code to your email. Enter it below to activate your account.</p>
+
+            <form id="verifyForm" onsubmit="handleVerification(event)">
+                <div class="otp-container">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required autofocus onkeyup="moveFocus(this, 1)">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required onkeyup="moveFocus(this, 2)">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required onkeyup="moveFocus(this, 3)">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required onkeyup="moveFocus(this, 4)">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required onkeyup="moveFocus(this, 5)">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required onkeyup="moveFocus(this, 6)">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Verify & Continue</button>
+            </form>
+
+            <div class="resend-box">
+                Didn't receive code? 
+                <span id="resendBtn" class="resend-link disabled" onclick="resendCode()">Resend Code</span>
+                <span id="timerText">(in <span id="countdown">60</span>s)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Need help verifying? Contact <a href="mailto:surveyGrid@gmail.com">surveyGrid@gmail.com</a> | &copy; 2026 SurveyGrid
+    </footer>
+
+    <!-- Interactive Script -->
+    <script>
+        // Auto-advance OTP Inputs
+        const inputs = document.querySelectorAll('.otp-input');
+        
+        function moveFocus(element, index) {
+            if (element.value.length === 1 && index < inputs.length) {
+                inputs[index].focus();
+            }
+        }
+
+        // Handle Paste Event for full code
+        inputs[0].addEventListener('paste', (e) => {
+            const pasteData = e.clipboardData.getData('text').trim();
+            if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+                inputs.forEach((input, i) => {
+                    input.value = pasteData[i];
+                });
+                inputs[5].focus();
+            }
+        });
+
+        // Resend Timer Logic
+        let timeLeft = 60;
+        const countdownEl = document.getElementById('countdown');
+        const timerTextEl = document.getElementById('timerText');
+        const resendBtn = document.getElementById('resendBtn');
+
+        function startTimer() {
+            timeLeft = 60;
+            resendBtn.classList.add('disabled');
+            timerTextEl.style.display = 'inline';
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    resendBtn.classList.remove('disabled');
+                    timerTextEl.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function resendCode() {
+            alert('A new verification code has been sent to your email.');
+            startTimer();
+        }
+
+        function handleVerification(e) {
+            e.preventDefault();
+            let code = '';
+            inputs.forEach(input => code += input.value);
+            
+            if (code.length === 6) {
+                alert('Email verified successfully!');
+                window.location.href = 'quiz.html';
+            } else {
+                alert('Please enter all 6 digits of your verification code.');
+            }
+        }
+
+        // Initialize Countdown on page load
+        startTimer();
+    </script>
+</body>
+  </html>
+  
