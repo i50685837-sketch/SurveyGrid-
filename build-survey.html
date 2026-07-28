@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Survey</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#0ea5e9);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:850px;
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 20px 50px rgba(0,0,0,.3);
+}
+
+h1{
+    text-align:center;
+    color:#0f172a;
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+    color:#333;
+}
+
+input,textarea,select{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    font-size:15px;
+}
+
+textarea{
+    resize:vertical;
+    min-height:100px;
+}
+
+.question{
+    background:#f8fafc;
+    padding:15px;
+    margin-top:20px;
+    border-radius:10px;
+    border-left:5px solid #2563eb;
+}
+
+button{
+    margin-top:20px;
+    padding:13px 25px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.add{
+    background:#2563eb;
+    color:white;
+}
+
+.publish{
+    background:#16a34a;
+    color:white;
+    width:100%;
+}
+
+button:hover{
+    opacity:.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Create Survey</h1>
+
+<form>
+
+<label>Survey Title</label>
+<input type="text" placeholder="Enter survey title">
+
+<label>Description</label>
+<textarea placeholder="Describe your survey"></textarea>
+
+<label>Category</label>
+<select>
+<option>Technology</option>
+<option>Business</option>
+<option>Education</option>
+<option>Health</option>
+<option>Finance</option>
+<option>Entertainment</option>
+</select>
+
+<label>Reward (KES)</label>
+<input type="number" placeholder="e.g. 50">
+
+<div id="questions">
+
+<div class="question">
+<label>Question 1</label>
+<input type="text" placeholder="Enter question">
+
+<label>Answer Type</label>
+<select>
+<option>Multiple Choice</option>
+<option>Text Answer</option>
+<option>Yes / No</option>
+<option>Rating (1-5)</option>
+</select>
+</div>
+
+</div>
+
+<button type="button" class="add" onclick="addQuestion()">
++ Add Question
+</button>
+
+<button type="submit" class="publish">
+Publish Survey
+</button>
+
+</form>
+
+</div>
+
+<script>
+let count = 1;
+
+function addQuestion(){
+
+count++;
+
+const container=document.getElementById("questions");
+
+const div=document.createElement("div");
+
+div.className="question";
+
+div.innerHTML=`
+<label>Question ${count}</label>
+<input type="text" placeholder="Enter question">
+
+<label>Answer Type</label>
+
+<select>
+<option>Multiple Choice</option>
+<option>Text Answer</option>
+<option>Yes / No</option>
+<option>Rating (1-5)</option>
+</select>
+`;
+
+container.appendChild(div);
+
+}
+</script>
+
+</body>
+</html>
