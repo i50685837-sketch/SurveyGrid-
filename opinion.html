@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Opinions & Feedback — SurveyGrid</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-blue);
+        }
+
+        .balance-badge {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent-green);
+            color: #34d399;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Container */
+        .dashboard-container {
+            max-width: 1000px;
+            width: 92%;
+            margin: 2rem auto;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Layout Grid */
+        .opinion-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .opinion-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Card */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Feed Post Cards */
+        .opinion-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .opinion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent-purple);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .opinion-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .topic-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .opinion-body {
+            font-size: 0.92rem;
+            color: #e2e8f0;
+        }
+
+        .opinion-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Sidebar Stats */
+        .stat-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .stat-box:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        footer {
+            padding: 1.5rem 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header -->
+    <header>
+        <a href="index.html" class="logo">
+            Survey<span>Grid</span>
+        </a>
+        <div class="nav-links">
+            <a href="quiz.html" class="nav-link">Quizzes</a>
+            <a href="build-survey.html" class="nav-link">Build Survey</a>
+            <a href="invest.html" class="nav-link">Invest Pools</a>
+            <a href="opinion.html" class="nav-link active">Opinions</a>
+            <div class="balance-badge">
+                💰 Balance: KSh <span id="walletBalance">0.00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="dashboard-container">
+        <h1 class="page-title">Community Opinions & Topics</h1>
+        <p class="page-subtitle">Share your perspective on market trends, earn engagement points, and vote on community discussions.</p>
+
+        <div class="opinion-grid">
+            
+            <!-- Left Column: Submit & Feed -->
+            <div>
+                <!-- Share Form -->
+                <div class="card">
+                    <h2 class="card-title">✍️ Post Your Opinion</h2>
+                    <form id="opinionForm" onsubmit="handlePostOpinion(event)">
+                        <div class="form-group">
+                            <label class="form-label">Category / Topic</label>
+                            <select id="topicSelect" class="form-select" required>
+                                <option value="Market Research">Market Research</option>
+                                <option value="Consumer Tech">Consumer Tech</option>
+                                <option value="Finance & Yield">Finance & Yield</option>
+                                <option value="Survey Quality">Survey Quality</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Your Feedback / Opinion</label>
+                            <textarea id="opinionText" class="form-textarea" placeholder="What are your thoughts on current market surveys or yield payouts?" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Publish Opinion (+KSh 10.00 Bonus)</button>
+                    </form>
+                </div>
+
+                <!-- Feed Header -->
+                <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">
+                    Recent Opinions
+                </div>
+
+                <!-- Posts List -->
+                <div id="opinionsFeed">
+                    
+                    <!-- Item 1 -->
+                    <div class="opinion-card">
+                        <div class="opinion-header">
+                            <div class="author-info">
+                                <div class="avatar">JK</div>
+                                <div>
+                                    <div class="author-name">James Kamau</div>
+                                    <div class="opinion-date">2 hours ago</div>
+                                </div>
+                            </div>
+                            <span class="topic-tag">Finance & Yield</span>
+                        </div>
+                        <p class="opinion-body">
+                            The daily compounding yields on enterprise pools are working really well. It would be great to see shorter 3-day micro lockup options for smaller stakes!
+                        </p>
+                        <div class="opinion-actions">
+                            <button class="action-btn" onclick="upvote(this)">👍 <span>14</span> Likes</button>
+                            <button class="action-btn">💬 Reply</button>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="opinion-card">
+                        <div class="opinion-header">
+                            <div class="author-info">
+                                <div class="avatar" style="background-color: var(--accent-green);">AO</div>
+                                <div>
+                                    <div class="author-name">Achieng Otieno</div>
+                                    <div class="opinion-date">5 hours ago</div>
+                                </div>
+                            </div>
+                            <span class="topic-tag">Consumer Tech</span>
+                        </div>
+                        <p class="opinion-body">
+                            Adding real-time mobile push notifications when a new high-reward survey opens up would make response times much faster!
+                        </p>
+                        <div class="opinion-actions">
+                            <button class="action-btn" onclick="upvote(this)">👍 <span>29</span> Likes</button>
+                            <button class="action-btn">💬 Reply</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <div>
+                <div class="card">
+                    <h3 class="card-title" style="font-size: 1.05rem;">📊 Opinion Stats</h3>
+                    
+                    <div class="stat-box">
+                        <span style="color: var(--text-muted);">Total Opinions Posted</span>
+                        <strong>1,482</strong>
+                    </div>
+
+                    <div class="stat-box">
+                        <span style="color: var(--text-muted);">Community Reward Paid</span>
+                        <strong style="color: var(--accent-green);">KSh 14,820.00</strong>
+                    </div>
+
+                    <div class="stat-box">
+                        <span style="color: var(--text-muted);">Top Topic</span>
+                        <strong style="color: var(--accent-blue);">Finance & Yield</strong>
+                    </div>
+                </div>
+
+                <div class="card" style="background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.3);">
+                    <h3 class="card-title" style="font-size: 1rem; color: var(--accent-blue);">💡 Guideline</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        Keep discussions constructive and clear. High-quality feedback helps creators refine surveys and payout models.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        Need help or have feedback? Contact <a href="mailto:surveyGrid@gmail.com">surveyGrid@gmail.com</a> | &copy; 2026 SurveyGrid
+    </footer>
+
+    <script>
+        function handlePostOpinion(event) {
+            event.preventDefault();
+            
+            const topic = document.getElementById('topicSelect').value;
+            const text = document.getElementById('opinionText').value;
+
+            if (!text.trim()) return;
+
+            const feed = document.getElementById('opinionsFeed');
+            const newCard = document.createElement('div');
+            newCard.className = 'opinion-card';
+            
+            newCard.innerHTML = `
+                <div class="opinion-header">
+                    <div class="author-info">
+                        <div class="avatar" style="background-color: var(--accent-blue);">ME</div>
+                        <div>
+                            <div class="author-name">You</div>
+                            <div class="opinion-date">Just now</div>
+                        </div>
+                    </div>
+                    <span class="topic-tag">${topic}</span>
+                </div>
+                <p class="opinion-body">${escapeHtml(text)}</p>
+                <div class="opinion-actions">
+                    <button class="action-btn" onclick="upvote(this)">👍 <span>0</span> Likes</button>
+                    <button class="action-btn">💬 Reply</button>
+                </div>
+            `;
+
+            feed.prepend(newCard);
+            document.getElementById('opinionForm').reset();
+            alert('Your opinion has been published!');
+        }
+
+        function upvote(btn) {
+            const countSpan = btn.querySelector('span');
+            let current = parseInt(countSpan.innerText) || 0;
+            countSpan.innerText = current + 1;
+            btn.style.color = 'var(--accent-green)';
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+                                      </html>
+                          
