@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SurveyGrid</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 6%;
+            background-color: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-blue);
+        }
+
+        .btn-nav {
+            background-color: var(--accent-blue);
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-nav:hover {
+            background-color: #2563eb;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 5rem 1rem 3rem 1rem;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn-hero {
+            background-color: var(--accent-green);
+            color: #fff;
+            padding: 0.85rem 2.2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-hero:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+        }
+
+        /* Options Grid */
+        .features-section {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .card a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 5rem;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            background-color: rgba(15, 23, 42, 0.5);
+        }
+
+        .contact-info {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .contact-info a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Navigation Header -->
+    <header>
+        <div class="logo">
+            Survey<span>Grid</span>
+        </div>
+        <nav>
+            <a href="#quiz">Answer Quiz</a>
+            <a href="#create">Create Surveys</a>
+            <a href="#invest">Invest with SurveyGrid</a>
+            <a href="#opinions">Share Your Opinions</a>
+            <a href="register.html" class="btn-nav">Get Started</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Banner -->
+        <section class="hero">
+            <h1>Welcome to SurveyGrid</h1>
+            <p>Your platform for sharing insights, creating data-driven surveys, and exploring earning or investment opportunities.</p>
+            <a href="register.html" class="btn-hero">Get Started</a>
+        </section>
+
+        <!-- Dynamic Action Grid -->
+        <section class="features-section">
+            <div class="grid-cards">
+                
+                <!-- Answer Quiz Card -->
+                <div class="card" id="quiz">
+                    <div class="card-icon">✏️</div>
+                    <h3>Answer Quiz</h3>
+                    <p>Test your knowledge or complete quick feedback quizzes to earn points.</p>
+                    <a href="register.html">Start Quizzes &rarr;</a>
+                </div>
+
+                <!-- Create Surveys Card -->
+                <div class="card" id="create">
+                    <div class="card-icon">📊</div>
+                    <h3>Create Surveys</h3>
+                    <p>Build customized matrix surveys and reach targeted audiences instantly.</p>
+                    <a href="register.html">Build Survey &rarr;</a>
+                </div>
+
+                <!-- Invest Card -->
+                <div class="card" id="invest">
+                    <div class="card-icon">📈</div>
+                    <h3>Invest with SurveyGrid</h3>
+                    <p>Participate in growth funds and investment plans on surveyGrid.com.</p>
+                    <a href="register.html">Explore Plans &rarr;</a>
+                </div>
+
+                <!-- Share Opinions Card -->
+                <div class="card" id="opinions">
+                    <div class="card-icon">🗣️</div>
+                    <h3>Share Your Opinions</h3>
+                    <p>Give feedback on major brands and get compensated for your voice.</p>
+                    <a href="register.html">Share Voice &rarr;</a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="contact-info">
+            Questions or support? Reach us at: <a href="mailto:surveyGrid@gmail.com">surveyGrid@gmail.com</a>
+        </div>
+        <p class="copyright">&copy; 2026 SurveyGrid. All rights reserved.</p>
+    </footer>
+
+</body>
+          </html>
+          
